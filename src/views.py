@@ -1,13 +1,22 @@
-import pprint
+import json
+import os
 
-from src.utils import read_excel, extract_cards, hello_greeting, sort_by_sum, user_settings, get_currency_rates, \
-    get_stock_prices
+from config import ROOT_DIR
+from src.utils import (
+    extract_cards,
+    get_currency_rates,
+    get_stock_prices,
+    hello_greeting,
+    read_excel,
+    sort_by_sum,
+    user_settings
+)
 
 
-def start_main(date_time):
-    df = read_excel('../data/operations.xlsx')
-    settings_user = user_settings('../user_setting.json')
-    print(settings_user)
+def start_main(date_time: str) -> str:
+    """Функция, которая """
+    df = read_excel(os.path.join(ROOT_DIR, "data", "operations.xlsx"))
+    settings_user = user_settings(os.path.join(ROOT_DIR, "user_setting.json"))
     cards = extract_cards(df)
     greeting = hello_greeting(date_time)
     top_transactions = sort_by_sum(df)
@@ -18,10 +27,6 @@ def start_main(date_time):
         "cards": cards,
         "top_transactions": top_transactions,
         "currency_rates": currency_rates,
-        "stock_prices": stock_prices
+        "stock_prices": stock_prices,
     }
-    return result
-
-if __name__ == '__main__':
-
-    pprint.pprint(start_main('2021-09-01 09:00:00'))
+    return json.dumps(result, ensure_ascii=False)
